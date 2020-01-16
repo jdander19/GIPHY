@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title> </title>
+</head>
+
+<body>
+    <div id="buttons">
+
+        <button data-person="Hellboy">
+            Hellboy
+        </button>
+        <button data-person="Batman">
+            Batman
+        </button>
+        <button data-person="Superman">
+            Superman
+        </button>
+
+        <button data-person="Ed Edd 'n' Eddy">
+            Ed Edd 'n' Eddy
+        </button>
+        <button data-person="Princess Bride">
+            Princess Bride
+        </button>
+        <button data-person="Dragon">
+            Dragons
+        </button>
+
+    </div>
+
+    <div id="gifs-appear-here">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+        data-still="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+        data-animate="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" data-state="still"
+        class="gif"></script>
+
+    <script type="text/javascript">
+        $("button").on("click", function () {
+            var person = $(this).attr("data-person");
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                person + "&api_key=2ZFQTDU50m2ixY8iv8qRPXMbLaihflyJ";
+
+
+            $(".gif").on("click", function () {
+                var state = $(this).attr("data-state");
+                if (state === "still") {
+                    var animateVal = $(this).attr("data-animate");
+                    $(this).attr("src", animateVal);
+                    $(this).attr("data-state", "animate");
+                } else {
+                    var stillVal = $(this).attr("data-still");
+                    $(this).attr("src", stillVal);
+                    $(this).attr("data-state", "still");
+                }
+            });
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+                .then(function (response) {
+                    var results = response.data;
+
+                    for (var i = 0; i < results.length; i++) {
+                        var gifDiv = $("<div>");
+
+                        var rating = results[i].rating;
+
+                        var p = $("<p>").text("Rating: " + rating);
+
+                        var personImage = $("<img>");
+                        personImage.attr("src", results[i].images.fixed_height.url);
+
+                        gifDiv.prepend(p);
+                        gifDiv.prepend(personImage);
+
+                        $("#gifs-appear-here").prepend(gifDiv);
+                    }
+                });
+        });
+    </script>
+</body>
+
+</html>
