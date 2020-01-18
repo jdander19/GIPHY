@@ -3,61 +3,49 @@
 
 <head>
     <meta charset="utf-8">
-    <title> </title>
+    <title> GIPHY HW </title>
 </head>
 
 <body>
     <div id="buttons">
-
-        <button data-person="Hellboy">
+        <img src = "http://placecorgi.com/200/200" class= "gifs">
+        <button gif-pull="Hellboy">
             Hellboy
         </button>
-        <button data-person="Batman">
+        <button gif-pull="Batman">
             Batman
         </button>
-        <button data-person="Superman">
+        <button gif-pull="Superman">
             Superman
         </button>
-
-        <button data-person="Ed Edd 'n' Eddy">
+        <button gif-pull="Ed Edd 'n' Eddy">
             Ed Edd 'n' Eddy
         </button>
-        <button data-person="Princess Bride">
+        <button gif-pull="Princess Bride">
             Princess Bride
         </button>
-        <button data-person="Dragon">
+        <button gif-pull="Dragon">
             Dragons
         </button>
 
     </div>
 
-    <div id="gifs-appear-here">
+    <div id="gifs">
+
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
-        data-still="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
-        data-animate="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" data-state="still"
-        class="gif"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <script type="text/javascript">
+        function RandomNumber() {
+            return Math.floor(Math.random() * 10);
+        }
+
+
         $("button").on("click", function () {
-            var person = $(this).attr("data-person");
+            var person = $(this).attr("gif-pull");
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
                 person + "&api_key=2ZFQTDU50m2ixY8iv8qRPXMbLaihflyJ";
-
-
-            $(".gif").on("click", function () {
-                var state = $(this).attr("data-state");
-                if (state === "still") {
-                    var animateVal = $(this).attr("data-animate");
-                    $(this).attr("src", animateVal);
-                    $(this).attr("data-state", "animate");
-                } else {
-                    var stillVal = $(this).attr("data-still");
-                    $(this).attr("src", stillVal);
-                    $(this).attr("data-state", "still");
-                }
-            });
 
             $.ajax({
                 url: queryURL,
@@ -73,16 +61,40 @@
 
                         var p = $("<p>").text("Rating: " + rating);
 
-                        var personImage = $("<img>");
-                        personImage.attr("src", results[i].images.fixed_height.url);
-
+                        var gifPic = $("<img class= 'gifs'>");
+                        //gifPic.attr("class", "gifs")
+                        gifPic.attr("data-id", results[i].id);
+                        gifPic.attr("src", results[i].images.fixed_width_still.url);
+                        gifPic.attr("alt", results[i].title);
+                        gifPic.attr("data-state", "still");
+                        gifPic.attr("data-animate", results[i].images.fixed_width.url);
+                        gifPic.attr("data-still", results[i].images.fixed_width_still.url);
+                        //gifPic.addClass("gifs")
                         gifDiv.prepend(p);
-                        gifDiv.prepend(personImage);
+                        gifDiv.prepend(gifPic);
 
-                        $("#gifs-appear-here").prepend(gifDiv);
+                        $("#gifs").prepend(gifDiv);
                     }
                 });
         });
+
+        $(".gifs").on("click", function () {
+            var state = $(this).attr("data-state");
+
+            if (state === "still") {
+                console.log("in the if statment")
+                var animateVal = $(this).attr("data-animate");
+                $(this).attr("src", animateVal);
+                $(this).attr("data-state", "animate");
+            } else {
+                console.log("in the else statment")
+                var stillVal = $(this).attr("data-still");
+                $(this).attr("src", stillVal);
+                $(this).attr("data-state", "still");
+            }
+        });
+    
+
     </script>
 </body>
 
