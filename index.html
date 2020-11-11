@@ -8,22 +8,23 @@
 
 <body>
     <div id="buttons">
-        <button gif-pull="Hellboy">
-            Hellboy
+        
+        <button gif-pull="The Office">
+            The Office
         </button>
-        <button gif-pull="Batman">
+        <button gif-pull="Batman Animated">
             Batman
         </button>
-        <button gif-pull="Superman">
+        <button gif-pull="Superman Cartoon">
             Superman
         </button>
-        <button gif-pull="Ed Edd 'n' Eddy">
-            Ed Edd 'n' Eddy
+        <button gif-pull="WWE wrestling">
+            WWE
         </button>
-        <button gif-pull="Princess Bride">
-            Princess Bride
+        <button gif-pull="90s Anime">
+            Anime
         </button>
-        <button gif-pull="Dragon">
+        <button gif-pull="Fantasy Dragon">
             Dragons
         </button>
 
@@ -42,9 +43,9 @@
 
 
         $("button").on("click", function () {
-            var person = $(this).attr("gif-pull");
+            var gifs = $(this).attr("gif-pull");
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                person + "&api_key=2ZFQTDU50m2ixY8iv8qRPXMbLaihflyJ";
+                gifs + "&api_key=2ZFQTDU50m2ixY8iv8qRPXMbLaihflyJ";
 
             $.ajax({
                 url: queryURL,
@@ -60,7 +61,7 @@
 
                         var p = $("<p>").text("Rating: " + rating);
 
-                        var gifPic = $("<img class= 'gifs'>");
+                        var gifPic = $("<img>", 'gifs');
                         //gifPic.attr("class", "gifs")
                         gifPic.attr("data-id", results[i].id);
                         gifPic.attr("src", results[i].images.fixed_width_still.url);
@@ -74,25 +75,28 @@
 
                         $("#gifs").prepend(gifDiv);
                     }
+
+                    $(".gifs").on("click", function () {
+                        var state = $(this).attr("data-state");
+
+                        if (state === "still") {
+                            console.log("in the if statment")
+                            var animateVal = $(this).attr("data-animate");
+                            $(this).attr("src", animateVal);
+                            $(this).attr("data-state", "animate");
+                        } else {
+                            console.log("in the else statment")
+                            var stillVal = $(this).attr("data-still");
+                            $(this).attr("src", stillVal);
+                            $(this).attr("data-state", "still");
+                        }
+                    });
                 });
         });
 
-        $(".gifs").on("click", function () {
-            var state = $(this).attr("data-state");
 
-            if (state === "still") {
-                console.log("in the if statment")
-                var animateVal = $(this).attr("data-animate");
-                $(this).attr("src", animateVal);
-                $(this).attr("data-state", "animate");
-            } else {
-                console.log("in the else statment")
-                var stillVal = $(this).attr("data-still");
-                $(this).attr("src", stillVal);
-                $(this).attr("data-state", "still");
-            }
-        });
-    
+
+
 
     </script>
 </body>
